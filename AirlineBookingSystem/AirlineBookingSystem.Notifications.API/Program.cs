@@ -1,3 +1,8 @@
+using AirlineBookingSystem.Notifications.Core.Repositories;
+using AirlineBookingSystem.Notifications.Infrastructure.Repositories;
+using Microsoft.Data.SqlClient;
+using System.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -5,7 +10,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+//Application Servies
+builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 
+// Add Sql Connection
+builder.Services.AddScoped<IDbConnection>(provider =>
+	new SqlConnection(builder.Configuration.GetConnectionString("DefaultConnection")));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

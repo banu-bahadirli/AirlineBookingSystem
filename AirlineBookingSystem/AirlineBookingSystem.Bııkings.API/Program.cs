@@ -1,3 +1,10 @@
+using AirlineBookingSystem.Bookings.Application.Handlers;
+using AirlineBookingSystem.Bookings.Core.Repositories;
+using AirlineBookingSystem.Bookings.Infrastructure.Repositories;
+using Microsoft.Data.SqlClient;
+using System.Data;
+using System.Reflection;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -5,6 +12,23 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+//builder.Services.AddSwaggerGen();
+
+//Register MediatR
+var assemblies = new Assembly[]
+{
+	Assembly.GetExecutingAssembly(),
+	typeof(CreateBookingHandler).Assembly,
+	typeof(GetBookingHandler).Assembly
+};
+
+builder.Services.AddMediatR(cfg=>cfg.RegisterServicesFromAssemblies(assemblies));
+
+builder.Services.AddScoped<IBookingRepository, BookingRepository>();
+
+// Add Sql Connection
+builder.Services.AddScoped<IDbConnection>(provider =>
+	new SqlConnection(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
 
