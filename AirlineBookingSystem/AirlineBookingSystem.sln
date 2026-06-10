@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36603.0 d17.14
+VisualStudioVersion = 17.14.36603.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildingBlocks", "BuildingBlocks", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
@@ -19,7 +19,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Notification", "Notificatio
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Payment", "Payment", "{61C00459-34F5-41B6-A545-1A4CC3A42AFC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirlineBookingSystem.Bııkings.API", "AirlineBookingSystem.Bııkings.API\AirlineBookingSystem.Bııkings.API.csproj", "{24A7AD38-5DD6-4703-BB78-15C1A7465AA1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirlineBookingSystem.Bookings.API", "AirlineBookingSystem.Bııkings.API\AirlineBookingSystem.Bookings.API.csproj", "{24A7AD38-5DD6-4703-BB78-15C1A7465AA1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirlineBookingSystem.Bookings.Application", "AirlineBookingSystem.Bookings.Application\AirlineBookingSystem.Bookings.Application.csproj", "{27D85519-6B22-4CBE-99AB-3F1C297224E5}"
 EndProject

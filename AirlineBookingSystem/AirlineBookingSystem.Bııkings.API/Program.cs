@@ -1,7 +1,10 @@
 using AirlineBookingSystem.Bookings.Application.Handlers;
 using AirlineBookingSystem.Bookings.Core.Repositories;
 using AirlineBookingSystem.Bookings.Infrastructure.Repositories;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Data.SqlClient;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using Swashbuckle.AspNetCore.SwaggerUI;
 using System.Data;
 using System.Reflection;
 
@@ -12,7 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
-//builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen();
 
 //Register MediatR
 var assemblies = new Assembly[]
@@ -41,6 +44,9 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.MapControllers();
 
