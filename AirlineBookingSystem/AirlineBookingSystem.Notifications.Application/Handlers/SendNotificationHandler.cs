@@ -1,4 +1,5 @@
 ﻿using AirlineBookingSystem.Notifications.Application.Commands;
+using AirlineBookingSystem.Notifications.Application.Interfaces;
 using AirlineBookingSystem.Notifications.Core.Entities;
 using AirlineBookingSystem.Notifications.Core.Repositories;
 using MediatR;
@@ -12,11 +13,11 @@ namespace AirlineBookingSystem.Notifications.Application.Handlers
 {
 	public class SendNotificationHandler : IRequestHandler<SendNotificationCommand>
 	{
-		private readonly INotificationRepository _notificationRepository;
+		private readonly INotificationService _notificationService;
 
-		public SendNotificationHandler(INotificationRepository notificationRepository)
+		public SendNotificationHandler(INotificationService notificationService)
 		{
-			_notificationRepository = notificationRepository;
+			_notificationService = notificationService;
 		}
 		public async Task Handle(SendNotificationCommand request, CancellationToken cancellationToken)
 		{
@@ -28,7 +29,7 @@ namespace AirlineBookingSystem.Notifications.Application.Handlers
 				Type= request.Type
 			};
 
-			await _notificationRepository.LogNotificationAsync(notification);
+			await _notificationService.SendNotificationAsync(notification);
 		}
 	}
 }

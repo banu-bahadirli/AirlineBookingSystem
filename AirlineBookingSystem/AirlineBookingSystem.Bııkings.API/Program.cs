@@ -1,6 +1,9 @@
+using AirlineBookingSystem.Bookings.Application.Consumers;
 using AirlineBookingSystem.Bookings.Application.Handlers;
 using AirlineBookingSystem.Bookings.Core.Repositories;
 using AirlineBookingSystem.Bookings.Infrastructure.Repositories;
+using AirlineBookingSystem.BuildingBlocks.Common;
+using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Data.SqlClient;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -28,6 +31,23 @@ var assemblies = new Assembly[]
 builder.Services.AddMediatR(cfg=>cfg.RegisterServicesFromAssemblies(assemblies));
 
 builder.Services.AddScoped<IBookingRepository, BookingRepository>();
+
+//Add MassTransit
+builder.Services.AddMassTransit(config =>
+{
+	// Register the consumer
+	config.AddConsumer<NotificationEventConsumer>();
+
+	// Register the bus and configure RabbitMQ
+	config.UsingRabbitMq((context, cfg) =>
+	{
+		cfg.Host(builder.Configuration["EventBusSettings:HostAddress"]);
+		cfg.ReceiveEndpoint(EventBusConstant.NotificationSentQueue, e =>
+		{
+			e.ConfigureConsumer<NotificationEventConsumer>(context);
+		});
+	});
+});
 
 // Add Sql Connection
 builder.Services.AddScoped<IDbConnection>(provider =>

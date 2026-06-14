@@ -1,6 +1,8 @@
-﻿using AirlineBookingSystem.Payments.Application.Commands;
+﻿using AirlineBookingSystem.BuildingBlocks.Contracts.EventBus.Messages;
+using AirlineBookingSystem.Payments.Application.Commands;
 using AirlineBookingSystem.Payments.Core.Entities;
 using AirlineBookingSystem.Payments.Core.Repositories;
+using MassTransit;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -14,10 +16,12 @@ namespace AirlineBookingSystem.Payments.Application.Handlers
 	{
 
 		private readonly IPaymentRepository _repository;
+		private readonly IPublishEndpoint _publishEndpont;
 
-		public ProcessPaymentHandler(IPaymentRepository repository)
+		public ProcessPaymentHandler(IPaymentRepository repository,IPublishEndpoint publishEndpoint)
 		{
 			_repository = repository;
+			_publishEndpont = publishEndpoint;
 		}
 
 
@@ -33,6 +37,14 @@ namespace AirlineBookingSystem.Payments.Application.Handlers
 			};
 
 			await _repository.ProcessPaymentAsync(payment);
+			//Publish PaymentprocessEvent
+			await _publishEndpont.Publish(new PaymentProcessEvent
+			(
+				payment.Id,
+				payment.BookingId,
+				payment.Amount,
+				 payment.PaymentDate
+			));
 
 			return payment.Id;
 		}

@@ -1,6 +1,10 @@
+using AirlineBookingSystem.BuildingBlocks.Common;
+using AirlineBookingSystem.BuildingBlocks.Contracts.EventBus.Messages;
+using AirlineBookingSystem.Payments.Application.Consumers;
 using AirlineBookingSystem.Payments.Application.Handlers;
 using AirlineBookingSystem.Payments.Core.Repositories;
 using AirlineBookingSystem.Payments.Infrastructure.Repositories;
+using MassTransit;
 using Microsoft.Data.SqlClient;
 using System.Data;
 using System.Reflection;
@@ -29,6 +33,22 @@ builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 
 //Application Servies
 builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
+
+builder.Services.AddMassTransit(config =>
+{
+	// Register the consumer
+	config.AddConsumer<FlightBookedConsumer>();
+
+	// Register the bus and configure RabbitMQ
+	config.UsingRabbitMq((context, cfg) =>
+	{
+		cfg.Host(builder.Configuration["EventBusSettings:HostAddress"]);
+		cfg.ReceiveEndpoint(EventBusConstant.FlightBookedQueue, e =>
+		{
+			e.ConfigureConsumer<FlightBookedConsumer>(context);
+		});
+	});
+});
 
 // Add Sql Connection
 builder.Services.AddScoped<IDbConnection>(provider =>
