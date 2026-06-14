@@ -6,6 +6,8 @@ using AirlineBookingSystem.Payments.Core.Repositories;
 using AirlineBookingSystem.Payments.Infrastructure.Repositories;
 using MassTransit;
 using Microsoft.Data.SqlClient;
+using Npgsql; // Add this at the top with other using directives
+using System;
 using System.Data;
 using System.Reflection;
 
@@ -50,9 +52,9 @@ builder.Services.AddMassTransit(config =>
 	});
 });
 
-// Add Sql Connection
-builder.Services.AddScoped<IDbConnection>(provider =>
-	new SqlConnection(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddScoped<IDbConnection>(sp =>
+	new NpgsqlConnection(builder.Configuration.GetConnectionString("PostgresConnection")));
+
 var app = builder.Build();
 
 
