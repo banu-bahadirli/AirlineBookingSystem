@@ -10,6 +10,9 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using System.Data;
 using System.Reflection;
+using Microsoft.Extensions.Caching.StackExchangeRedis;
+using StackExchange.Redis;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +33,11 @@ var assemblies = new Assembly[]
 
 builder.Services.AddMediatR(cfg=>cfg.RegisterServicesFromAssemblies(assemblies));
 
+//Redis
+var redisConfiguration = builder.Configuration["CacheSettings:ConnectionString"];
+var redis = ConnectionMultiplexer.Connect(redisConfiguration);
+builder.Services.AddSingleton<IConnectionMultiplexer>(redis);	
+
 builder.Services.AddScoped<IBookingRepository, BookingRepository>();
 
 //Add MassTransit
@@ -49,9 +57,7 @@ builder.Services.AddMassTransit(config =>
 	});
 });
 
-// Add Sql Connection
-builder.Services.AddScoped<IDbConnection>(provider =>
-	new SqlConnection(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 
 var app = builder.Build();
 
